@@ -1,0 +1,494 @@
+FUNCTION withLeftMarginpPointer(string):
+    return a modified version of the given string with 7 spaces at the the start, it is design for strings with pointer
+END FUNCTION
+
+FUNCTION withLeftMargin(string):
+    return a modified version of the given string with 8 spaces to the left side
+END FUNCTION
+
+FUNCTION withMargin(string):
+    return a modified version of the given string with 8 spaces to both left and right side 
+END FUNCTION
+
+FUNCTION clear():
+    EXECUTE os.system('cls') to clear the Console Screen
+END FUNCTION
+
+FUNCTION indexFinder(varList, ID):
+    FOR EVERY index IN RANGE 0 to total number of value in varList:
+        IF varList[index] is the same with given ID DO THIS:
+            RETURN index
+END FUNCTION
+
+FUNCTION dateRange(startDate, endDate):
+    current_Date = startDate
+    WHILE current_Date is less than or equal to endDate:
+        YIELD the datetime object current_Date to the caller
+        ADD one day to current_Date
+    END WHILE
+END FUNCTION
+
+FUNCTION main():
+    EXECUTE globalVariable() to declare the global variables that will be used in the system
+    EXECUTE employeeInfoContainer() to declare the global variables that will act as storage for the employees' information
+    EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to create a header with the title "CC03 DAILY-TIME RECORD SYSTEM" and set the width of the console screen to 120 columns and the height of the console screen to 13 lines
+    EXECUTE mainMenu() to create a menu and then ask the user for input
+END FUNCTION
+
+FUNCTION globalVariable():
+    DECLARE AS GLOBAL formattedTime, formattedDate, askStartDate, askEndDate, timeIn, timeOut because we will use these variable in other part of this code we need to make them accessible
+END FUNCTION
+
+FUNCTION employeeInfoContainer():
+    DECLARE AS GLOBAL empID,empFirstName, empLastName,empDepartment, empPosition, empTotalHours, empTotalAbsent, empDateStart, empDateEnd we need these variable to be accessible because it will act as storage for information
+    DECLARE empID = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empFirstName  = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empLastName = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empDepartment = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empPosition = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empTotalHours = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empTotalAbsent = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empDateStart = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+    DECLARE empDateEnd = AN EMPTY LIST THAT WILL BE ACT AS A CONTAINER
+END FUNCTION
+
+FUNCTION header(title, width, height):
+    EXECUTE setConsoleSize(width, height) to set the width and height of the console
+    DECLARE currentDateTime = Current Date And Time
+    DECLARE formattedTime and formattedDate as GLOBAL VARIABLES 
+    ASSIGN formattedTime = currentTime FORMATTED IN 12-HOUR FORMAT REMOVING THE LEADING "0" IN HOUR
+    ASSIGN formattedDate = currentDate FORMATTED AS "MM-DD-YYYY"
+    DISPLAY "        ==================================== {title} =====================================        "
+    DISPLAY "                                                                       {formattedDate} {formattedTime}"
+END FUNCTION
+
+FUNCTION setConsoleSize(width, height):
+    EXECUTE os.system(f'mode con cols={width} lines={height}') it will change the width and height of the console screen base on the given values 
+END FUNCTION
+
+FUNCTION mainMenu():
+    DISPLAY WITH LEFT MARGIN "1. TIMEKEEPING"
+    DISPLAY WITH LEFT MARGIN "2. REGISTER EMPLOYEE"
+    DISPLAY WITH LEFT MARGIN "3. VIEW EMPLOYEE"
+    DISPLAY WITH LEFT MARGIN "4. EXIT" NEWLINE CHARACTER
+    EXECUTE askCode() to ask the user for an input and process it based on the selected option
+END FUNCTION
+
+FUNCTION askCode():
+    TRY THIS:
+        menuChoice = INTEGER INPUT OF THE USER
+        IF menuChoice is greater than 4 OR menuChoice IS LESS THAN OR EQUAL TO 0 DO THIS:
+            EXECUTE clear() to clear the console screen
+            EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to set the title of the header, width and height of the console screen
+            DISPLAY "" THAT WILL ACT AS EMPTY SPACE
+            DISPLAY WITH LEFT MARGIN "Your input is not valid. Please enter either '1' for Timekeeping, '2' for Register Employee, '3' for View"
+            DISPLAY WITH LEFT MARGIN "Employee, or  '4' for Exit." NEWLINE CHARACTER
+            EXECUTE mainMenu() to display the main menu and ask the user again
+        ELSE DO THIS:
+            EXECUTE clear() to clear the console screen
+            IF menuChoice IS EQUAL TO  1 DO THIS:
+                EXECUTE timeKeepingScreen("TIMEKEEPING SCREEN", 110, 40) to set the width to 110 and height to 40 of the console screen, and also handle the timekeeping records
+            ELSE IF menuChoice IS EQUAL TO 2 DO THIS:
+                EXECUTE registerEmployeeScreen("REGISTER EMPLOYEE", 110, 20) to set the width to 110 and height to 20 of the console screen, and also handle the registration
+            ELSE IF menuChoice IS EQUAL TO 3 DO THIS:
+                EXECUTE viewEmployee() to handle the process on viewing the employee information
+            ELSE IF mainMenu IS EQUAL TO 4 DO THIS:
+                EXECUTE exitScreen() to terminate the program
+            ELSE DO THIS:
+                EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display again the header
+                EXECUTE mainMenu() to display again the main menu and ask the user again
+
+    EXCEPT IF THERE'S AN EXCEPTION DO THIS:
+            EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display again the header
+            EXECUTE mainMenu() to display again the main menu and ask the user again
+END FUNCTION
+
+FUNCTION timeKeepingScreen(title, width, height):
+    EXECUTE header(title, width, height) to create a header with the given title, width, and height
+    EXECUTE askEmployee() to start the process of timekeeping
+END FUNCTION
+
+FUNCTION askEmployee():
+    DECLARE GLOBAL VARIABLES askEmpID and askToRegister because we will use these variables in other part of our program
+
+    REPEAT INDEFINITELY:
+        TRY THIS:
+            askEmpID = INTEGER INPUT OF THE USER REPRESENTING THE EMPLOYEE ID
+            IF askEmpID is in empID DO THIS:
+                EXECUTE startdate() to ask for start date input and then process it
+                BREAK THE LOOP
+            ELSE IF askEmpID is not in empID DO THIS:
+                REPEAT INDEFINITELY:
+                    askToRegister = STRING INPUT OF THE USER
+                    IF askToRegister is "Y" or "y" DO THIS:
+                        EXECUTE clear() to clear console screen
+                        EXECUTE registerEmployeeScreen("REGISTER EMPLOYEE", 110, 20)
+                        BREAK THE LOOP
+                    ELSE IF askToRegister is "N" or "n" DO THIS:
+                        EXECUTE clear() to clear console screen
+                        EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display again the main menu header
+                        EXECUTE mainMenu() to display again the main menu
+                        BREAK THE LOOP
+                    ELSE DO THIS:
+                        CONTINUE THE LOOP because the user entered an invalid input
+            ELSE DO THIS:
+                DISPLAY "Please enter integer value. Ex. '10001', '10002'.\n"
+                CONTINUE THE LOOP because the user entered an invalid input
+        EXCEPT IF THERE'S AN EXCEPTION DO THIS:
+            DISPLAY "Please enter integer value. Ex. '10001', '10002'.\n"
+            CONTINUE THE LOOP because the user probably entered non-integer values
+END FUNCTION
+
+FUNCTION startDate():
+    DECLARE GLOBAL VARIABLES empInd, askStartDate, intStartDate
+
+    ASSIGN empInd = INDEX VALUE OF THE GIVEN ID
+    
+    FUNCTION isValidDate(date):
+        TRY TO:
+            CONVERT date TO datetime object WITH FORMAT "%Y-%m-%d"
+            IF SUCCESSFUL, RETURN TRUE
+        EXECEPT IF THERE'S AN EXCEPTION:
+            RETURN FALSE
+
+    REPEAT INDEFINITELY:
+        ASSIGN askStartDate = USER'S INPUT FOR START DATE
+        IF isValidDate(askStartDate) IS TRUE:
+            intStartDate = CONVERT askStartDate TO datetime object WITH FORMAT "%Y-%m-%d"
+            APPEND askStartDate TO empDateStart[empInd]
+            BREAK THE LOOP because the user entered a valid Start Date
+        ELSE:
+            DISPLAY WITH LEFT MARGIN"INCORRECT START DATE ENTRY. INVALID DATE. TRY AGAIN!"
+            CONTINUE THE LOOP because the user entered an invalid End Date
+
+    EXECUTE enddate() FUNCTION
+END FUNCTION
+
+FUNCTION endDate():
+    DECLARE GLOBAL VARIABLES intEndDate, askEndDate
+
+    FUNCTION isValidDate(date):
+        TRY TO:
+            CONVERT date TO datetime object WITH FORMAT "%Y-%m-%d"
+            IF SUCCESSFUL, RETURN TRUE
+        EXECEPT IF THERE'S AN EXCEPTION:
+            RETURN FALSE
+    END FUNCTION
+
+    REPEAT INDEFINITELY:
+        askEndDate = USER'S INPUT FOR START DATE
+        IF isValidDate(askEndDate) IS TRUE DO THIS :
+            intEndDate = CONVERT askEndDate TO datetime object WITH FORMAT "%Y-%m-%d"
+            IF intEndDate IS EARLIER OR THE SAME WITH intStartDate DO THIS:
+                DISPLAY WITH LEFT MARGIN "The End Date you've entered is earlier or the same with your Start Date."
+                CONTINUE THE LOOP because the user entered an End Date that is earlier or the same with Start Date 
+            ELSE DO THIS:
+                APPEND askEndDate TO empDateEnd[empInd]
+                BREAK THE LOOP because the user entered a valid End Date
+        ELSE DO THIS:
+            DISPLAY WITH LEFT MARGIN "INCORRECT END DATE ENTRY. INVALID DATE. TRY AGAIN!" because the user entered an invalid End Date
+            CONTINUE THE LOOP because the user entered an invalid End Date
+    EXECUTE checkInOut() to ask the user for Time-in and Time-out inputs then process it
+END FUNCTION
+
+FUNCTION checkInOut():
+    DECLARE totalAbsent = 0 temporary holder of the total Absent
+    DECLARE totalHours = 0 temporary holder of the total Hours
+
+    FOR EVERY date FROM intStartDate to intEndDate DO THIS:
+        DISPLAY "" that will act as line break
+        DISPLAY WITH LEFT MARGIN ">>Date of Entry: " + date to display the Date Entry in a specific date
+        DISPLAY WITH LEFT MARGIN " (Enter 'A' if Absent)" to instruct the user what to do if Absent
+        REPEAT INDEFINITELY:
+            TRY THIS:
+                ASSIGN timeIn = STRING INPUT OF TIME-IN
+                hours, minutes = SPLITTED VALUES OF timeIn WILL BE ASSIGN TO hours and minutes
+                DECLARE intTimeIn = CONVERTED DATETIME OBJECT OF timeIn WITH FORMAT OF '%H:%M' or 24-HOUR FORMAT
+                IF THE LENGTH OF THE minutes IS NOT EQUAL TO 2 OR THE LENGTH OF THE hours IS NOT EQUAL TO TWO DO THIS:
+                    DISPLAY WITH LEFT MARGIN "INCORRECT TIME-IN FORMAT. PLEASE FOLLOW 24-HOUR FORMAT(HH:MM)."
+                    CONTINUE THE LOOP because the entered HOUR AND MINUTE should have a lenght of two 
+                REPEAT INDEFINITELY:
+                    TRY THIS:
+                        ASSIGN timeOut = STRING INPUT OF TIME-OUT
+                        hours, minutes = SPLITTED VALUES OF timeOut WILL BE ASSIGN TO hours and minutes
+                        DECLARE intTimeOut = CONVERTED DATETIME OBJECT OF timeOut WITH FORMAT OF '%H:%M' or 24-HOUR FORMAT
+                        IF THE LENGTH OF THE minutes IS NOT EQUAL TO 2 OR THE LENGTH OF THE hours IS NOT EQUAL TO 2 DO THIS:
+                            DISPLAY WITH LEFT MARGIN "INCORRECT TIME-OUT FORMAT. PLEASE FOLLOW 24-HOUR FORMAT(HH:MM)."
+                            CONTINUE THE LOOP because the entered HOUR AND MINUTE should have a lenght of two
+                        ELSE DO THIS:
+                            IF intTimeOut IS EARLIER OR SAME WITH intTimeIn DO THIS:
+                                DISPLAY WITH LEFT MARGIN "Time-Out input is earlier or same with Time-In."
+                                CONTINUE THE LOOP because the entered Time-out is earlier or the same with Time-in
+                            ELSE DO THIS:
+                                DECLARE timeWorked = TOTAL SECONDS WORKED 
+                                DECLARE result = CONVERT TOTAL SECONDS WORKED TO TOTAL HOURS 
+                                ADD result TO totalHours
+                                BREAK THE LOOP  because the Time-In and Time-Out process is done
+
+                    EXCEPT WHEN THERE'S AN EXCEPTION DO THIS:
+                        DISPLAY WITH LEFT MARGIN "INCORRECT TIME-OUT FORMAT. PLEASE FOLLOW 24-HOUR FORMAT(HH:MM)."
+                        CONTINUE THE LOOP because of invalid Time-Out input
+                BREAK THE MAIN LOOP after succesfully executing all the instructions in the WHILE LOOP without triggering the EXCEPT BLOCK
+            EXCEPT WHEN THERE'S AN EXCEPTION DO THIS:
+                IF timeIn IS EQUAL TO "A" OR timeIn IS EQUAL "a" DO THIS:
+                    ADD 1 TO totalAbsent
+                    REPEAT INDEFINITELY:
+                        ASSIGN timeOut = STRING INPUT OF TIME-OUT
+                        IF timeOut IS EQUAL TO "A" or timeOut IS EQUAL TO "a" DO THIS:
+                            BREAK THE LOOP because the process is Time-In and Time-Out process is done
+                        ELSE DO THIS:
+                            DISPLAY WITH LEFT MARGIN "Enter 'A' if Absent"
+                            CONTINUE THE LOOP because user didnt enter "A" for Time-Out
+                ELSE DO THIS:
+                    DISPLAY WITH LEFT MARGIN "INCORRECT TIME-IN FORMAT. PLEASE FOLLOW 24-HOUR FORMAT(HH:MM)."
+                    CONTINUE THE MAIN LOOP because user entered invalid input for Time-In
+                BREAK THE MAIN LOOP after a succesful handling of the Absent
+
+    APPEND totalHours TO empTotalHours[empInd] to append the accumulated hours of work 
+    APPPEND totalAbsent TO empTotalAbsent[empInd] to append the accumalated absences
+    ASSIGN totalAbsent = 0 just making sure it is 0, just to be safe
+    ASSIGN totalHours = 0 just making sure it is 0, just to be safe 
+    REPEAT INDEFINITELY:
+        DISPLAY "" that will act as a line break
+        DECLARE ask = STRING INPUT OF THE USER WHETHER TO DO ANOTHER TIMEKEEPING OR NOT
+        IF ask IS EQUAL TO 'Y' OR ask IS EQUAL TO 'y' DO THIS:
+            DISPLAY ""
+            EXECUTE askEmployee() to repeat the process of the timekeeping
+            BREAK THE LOOP 
+        ELSE IF ask IS EQUAL TO 'N' OR ask IS EQUAL TO 'n' DO THIS:
+            EXECUTE clear() to clear the console screen
+            EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display header of main menu
+            EXECUTE mainMenu() to display the choices and ask the user to what to do next
+        ELSE DO THIS:
+            DISPLAY WITH LEFT MARGIN "Please enter 'Y' or 'N' only."
+            CONTINUE THE LOOP because user entered an invalid input 
+END FUNCTION
+
+FUNCTION registerEmployeeScreen(title, width, height):
+    EXECUTE header(title, width, height) to create a header specifically for Employee Screen
+    DISPLAY WITH LEFT MARGIN POINTER ">>Employee Details"
+    EXECUTE isIDIntAvailable() to ask the user for a Employee ID and validate it
+    REPEAT INDEFINITELY:
+        registerFname = STRING INPUT OF USER'S FIRST NAME THAT IS CONVERTED IN UPPER CASE
+        splitParts = SPLITTED VALUES OF registerFname
+        IF ALL name IN splitParts IS ALPHA DO THIS:
+            APPEND registerFname to empFirstName
+            BREAK THE LOOP because the validation for First Name is done
+        ELSE DO THIS:
+            DISPLAY WITH LEFT MARGIN "Invalid Entry! Please enter a valid First Name."
+            CONTINUE THE LOOP because the input contains non-alphabetic characters
+        
+    REPEAT INDEFINITELY:
+        registerLname = STRING INPUT OF USER'S LAST NAME THAT IS CONVERTED IN UPPER CASE
+        splitParts = SPLITTED VALUES OF registerLname
+        IF ALL name IN splitParts IS ALPHA DO THIS:
+            APPEND registerLname to empLastName
+            BREAK THE LOOP because the validation for Last Name is done
+        ELSE DO THIS:
+            DISPLAY WITH LEFT MARGIN "Invalid Entry! Please enter a valid Last Name."
+            CONTINUE THE LOOP because the input contains non-alphabetic characters
+    EXECUTE isDepValid() to ask the user for Department input and process it
+    EXECUTE isPosValid() to ask the user for Position input and process it
+    APPEND [] TO empTotalHours because this empty list will be the container for the total hours worked by an employee
+    APPEND [] TO empTotalAbsent because this empty list will be the container for all of the absences of an employee
+    APPEND [] TO empDateStart because this empty list will be the container of the Start Dates of an employee
+    APPEND [] TO empDateEnd because this empty list will be the container for the End Dates of an employee
+    EXECUTE whatToDo() to ask the user if he/she wants to register another employee
+END FUNCTION
+
+FUNCTION isIDIntAvailable():
+    REPEAT INDEFINITELY:
+        TRY THIS:
+            DECLARE registerID = INTEGER INPUT FOR AN EMPLOYEE ID
+            IF registerID IS NOT IN empID(it is checking if the employee is available):
+                APPEND registerID TO empID to register a New employee ID
+            ELSE DO THIS:
+                DISPLAY WITH LEFT MARGIN  "ID '{registerID}' is not available. Please try again." to notify the user that the ID is not available
+                DISPLAY WITH LEFT MARGIN WITH LEFT MARGIN POINTER">>Employee Details"
+                CONTINUE THE LOOP because the ID is not available and the user need to repeat the process
+        EXCEPT IF THERE'S AN EXCEPTION DO THIS:
+            DISPLAY WITH LEFT MARGIN "Please enter only integer value. Ex. '10001', '10002'.\n" to notify the user that only integer values is allowed as input
+            DISPLAY WITH LEFT MARGIN POINTER ">>Employee Details"
+            CONTINUE THE LOOP because the user entered non-integer values 
+END FUNCTION
+
+FUNCTION isDepValid():
+    REPEAT INDEFINITELY:
+        TRY THIS:
+            DECLARE registerDep = INTEGER INPUT OF THE USER FOR DEPARMENT SELECTION
+            IF registerDep IS LESS THAN 3 AND registerDep IS GREATER THAN 0 DO THIS:
+                IF registerDep IS EQUAL WITH 1 DO THIS:
+                    APPEND "Faculty" in empDepartment to append the chosen Department
+                    RETURN to terminate the function
+                ELSE DO THIS:
+                    APPEND "Non-Faculty" in empDepartment to append the chosen Department
+                    RETURN to terminate the function
+            ELSE DO THIS:
+                DISPLAY WITH LEFT MARGIN "Please enter '1' or '2'only.\n" because the user entered invalid integers
+                CONTINUE THE LOOP to repeat the process
+        EXCEPT IF THERE'S AN EXCEPTION DO THIS:
+            DISPLAY WITH LEFT MARGIN "Please enter either '1' for Faculty or '2' for Non-Faculty.\n"
+            CONTINUE THE LOOP to repeat the process
+
+FUNCTION isPosValid():
+    REPEAT INDEFINITELY:
+        TRY THIS:
+            DECLARE registerPos = INTEGER INPUT OF USER FOR POSITION SELECTION
+            IF registerPos IS LESS THAN 3 AND registerPos IS GREATER THAN 0 DO THIS:
+                IF registerPos IS EQUAL TO 1 DO THIS:
+                    APPEND "Full-Time" TO empPosition to append the chosen Position
+                    RETURN to terminate the function
+                ELSE DO THIS:
+                    APPEND "Part-Time" TO empPosition to append the chosen Position
+                    RETURN to terminate the function
+            ELSE DO THIS:
+                DISPLAY WITH LEFT MARGIN "Please enter '1' or '2'only.\n"
+                CONTINUE THE LOOP to repeat the process
+        EXCEPT WHEN THERE'S AN EXCEPTION DO THIS:
+            DISPLAY WITH LEFT MARGIN "Please enter either '1' for Full-Time or '2' for Part-Time."
+            CONTINUE THE LOOP to repeat the process
+END FUNCTION
+
+FUNCTION whatToDo():
+    REPEAT INDEFINITELY:
+        DISPLAY WITH LEFT MARGIN "" acts a line break
+        DECLARE askToDo = STRING USER INPUT ON WHAT HE/SHE SHOULD DO NEXT
+        IF askToDo IS EQUAL TO "Y" or askToDo IS EQUAL WITH "y" DO THIS:
+            DISPLAY WITH LEFT MARGIN POINTER ">>Employee Details"
+            EXECUTE isIDIntAvailable() to validate Employee ID
+            REPEAT INDEFINITELY:
+                registerFname = STRING INPUT OF USER'S FIRST NAME THAT IS CONVERTED IN UPPER CASE
+                splitParts = SPLITTED VALUES OF registerFname
+                IF ALL name IN splitParts IS ALPHA DO THIS:
+                    APPEND registerFname to empFirstName
+                    BREAK THE LOOP because the validation for First Name is done
+                ELSE DO THIS:
+                    DISPLAY WITH LEFT MARGIN "Invalid Entry! Please enter a valid First Name."
+                    CONTINUE THE LOOP because the input contains non-alphabetic characters
+                
+            REPEAT INDEFINITELY:
+                registerLname = STRING INPUT OF USER'S LAST NAME THAT IS CONVERTED IN UPPER CASE
+                splitParts = SPLITTED VALUES OF registerLname
+                IF ALL name IN splitParts IS ALPHA DO THIS:
+                    APPEND registerLname to empLastName
+                    BREAK THE LOOP because the validation for Last Name is done
+                ELSE DO THIS:
+                    DISPLAY WITH LEFT MARGIN "Invalid Entry! Please enter a valid Last Name."
+                    CONTINUE THE LOOP because the input contains non-alphabetic characters
+            EXECUTE isDepValid() to ask the user for Department input and process it
+            EXECUTE isPosValid() to ask the user for Position input and process it
+            APPEND [] TO empTotalHours because this empty list will be the container for the total hours worked by an employee
+            APPEND [] TO empTotalAbsent because this empty list will be the container for all of the absences of an employee
+            APPEND [] TO empDateStart because this empty list will be the container of the Start Dates of an employee
+            APPEND [] TO empDateEnd because this empty list will be the container for the End Dates of an employee
+            EXECUTE whatToDo() to ask the user if he/she wants to register another employee
+            RETURN to terminate the function
+        ELSE IF askToDo IS EQUAL TO "N" OR askToDo IS EQUAL "n" DO THIS:
+            EXECUTE clear() to clear the console screen
+            EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display the header for main menu
+            EXECUTE mainMenu()
+            RETURN to terminate the function
+        ELSE DO THIS:
+            CONTINUE THE LOOP to repeat the process of asking the user on what to do next
+END FUNCTION
+
+FUNCTION viewEmployee():
+    EXECUTE setConsoleSize(80,50) to set the custom width and height of the console
+    DISPLAY WITH LEFT MARGIN "========================= View Employee =========================" to create a custom header
+    DISPLAY WITH LEFT MARGIN f"                                           {formattedDate} {formattedTime}" to display current date and time
+    
+    REPEAT INDEFINITELY:
+        TRY THIS:
+            DECLARE viewEmp = INTEGER INPUT FOR EMPLOYEE ID
+            IF viewEmp IS NOT IN empID DO THIS:
+                DECLARE askRegister = STRING INPUT OF THE CHOICE ITS EITHER 'Y' OR 'N'
+                IF askRegister IS EQUAL TO "Y" OR askRegister IS EQUAL TO "y" DO THIS:
+                    EXECUTE clear() to clear the console screen
+                    EXECUTE registerEmployeeScreen("REGISTER EMPLOYEE", 110, 20) to display the header for Register Screen
+                    RETURN to terminate this function
+                ELSE IF askToRegister IS EQUAL TO "N" OR askToRegister IS EQUAL TO "n" DO THIS:
+                    EXECUTE clear() to clear the console screen
+                    EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display the header for main menu
+                    EXECUTE mainMenu() to display the menu and ask the user on what to do
+                ELSE DO THIS:
+                    CONTINUE THE LOOP because of an invalid input
+            ELSE DO THIS:
+                BREAK THE LOOP because it is validated which means the Employee ID is registered
+        EXCEPT IF THERE'S AN EXCEPTION DO THIS:
+            DISPLAY WITH LEFT MARGIN "Please enter integer value. Ex. '10001', '10002'.\n"
+            CONTINUE THE LOOP because the user entered non-integer values
+    
+    TRY THIS:
+        DECLARE viewEmpInd = INDEX VALUE OF THE GIVEN EMPLOYEE ID
+        DISPLAY "" to add a line break
+        DISPLAY WITH LEFT MARGIN POINTER ">>Employee Details"
+        DISPLAY WITH LEFT MARGIN f"First Name: {empFirstName[viewEmpInd]}" to display the first name of an employee
+        DISPLAY WITH LEFT MARGIN f"Last Name: {empLastName[viewEmpInd]}" to display the last name of an employee
+        DISPLAY WITH LEFT MARGIN f"Department: {empDepartment[viewEmpInd]}" to display the Department where the employee belongs
+        DISPLAY WITH LEFT MARGIN f"Position: {empPosition[viewEmpInd]}" to display the Position of an employee
+        DISPLAY "" to add a line break
+
+        DISPLAY WITH LEFT MARGIN POINTER ">>Timekeeping Entries"
+        IF THE NUMBER OF empDateStart RECORD IS GREATER THAN 0 DO THIS:
+            FOR EVERY index IN RANGE 0 TO TOTAL NUMBER OF VALUES IN empDateStart[viewEmpInd]:
+                startDate = EXTRACTED START DATE FROM empDateStart[viewEmpInd]
+                endDate = EXTRACTED END DATE FROM empDateEnd[viewEmpInd]
+                totalHours = EXTRACTED TOTAL HOURS FROM empTotalHours[viewEmpInd]
+                totalAbsent = EXTRACTED TOTAL ABSENT FROM empTotalAbsent[viewEmpInd]
+                DISPLAY WITH LEFT MARGIN POINTER f"*Date Period: {startDate} to {endDate}" to display the Date Period
+                DISPLAY WITH LEFT MARGIN f"Total # of Hours Worked: {totalHours}" to display total hours worked of an employee
+                DISPLAY WITH LEFT MARGIN f"Total # Absences: {totalAbsent}" to display total absences of an employee
+                DISPLAY "" to add a line break
+        ELSE DO THIS:
+            DISPLAY WITH LEFT MARGIN "    No Records found."
+    EXCEPT WHEN THERE'S AN EXCEPTION:
+        DISPLAY WITH LEFT MARGIN "A problem has occured"
+    
+    REPEAT INDEFINITELY:
+        DISPLAY "" to add line break
+        DECLARE askIfView = INPUT IF THE USER WANT TO VIEW ANOTHER EMPLOYEE ITS EITHER 'Y' OR 'N'
+        IF askIfView IS EQUAL TO "Y" OR askIfView IS EQUAL TO "y" DO THIS:
+            DISPLAY ""
+            EXECUTE viewEmployee() to repeat the process of viewing an employee
+            BREAK THE LOOP just to make sure that the loop is properly terminated
+        ELSE IF askIfView IS EQUAL TO "N" OR askIfView IS EQUAL TO "n" DO THIS:
+            EXECUTE clear() to clear the console screen
+            EXECUTE header("CC03 DAILY-TIME RECORD SYSTEM", 120, 13) to display header of the main menu
+            EXECUTE mainMenu() to display the menu
+            BREAK THE LOOP to properly terminate the loop
+        ELSE DO THIS:
+            DISPLAY WITH LEFT MARGIN "Invalid Input! Try Again!"
+            CONTINUE THE LOOP because the user entered an invalid input
+END FUNCTION
+
+FUNCTION exitScreen(title, width, height):
+    DISPLAY "" to add empty space
+    DISPLAY "" to add empty space
+    DISPLAY "" to add empty space
+    DISPLAY "                                                     GOODBYE!"
+    DISPLAY "" to add empty space
+    DISPLAY "" to add empty space
+    DISPLAY "" to add empty space
+    DISPLAY WITH LEFT MARGIN "========================================================================================================"
+    EXECUTE sys.exit() to terminate the whole system
+END FUNCTION
+
+IF THIS FILE IS BEING RUN AS THE MAIN PROGRAM:
+    EXECUTE main() to start the Daily Time Record System
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
