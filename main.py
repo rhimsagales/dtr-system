@@ -2,6 +2,7 @@ import os
 from datetime import timedelta
 import datetime
 import sys
+import shutil
 
 #utility
 def withLeftMarginPointer(string):
@@ -107,10 +108,21 @@ def header(title, width, height):
     
 def setConsoleSize(width, height):
     """
-    The function sets the size of the console window in Python.
-    
+    Safely sets the console window size. On Windows, uses 'mode con'.
+    On Unix systems, attempts to use 'resize' if available. Silently fails if not supported.
     """
-    os.system(f'mode con cols={width} lines={height}' if os.name == 'nt' else f'resize -s {height} {width}')
+    try:
+        if os.name == 'nt':
+            os.system(f'mode con cols={width} lines={height}')
+        else:
+            # Check if 'resize' is available
+            if shutil.which('resize'):
+                os.system(f'resize -s {height} {width}')
+            else:
+                # resize not found; skip resizing
+                pass
+    except Exception:
+        pass  
 
 
 def mainMenu():
